@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIOM 3.0 Lite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .reactor {
+            width: 120px;
+            height: 120px;
+            border: 3px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            box-shadow: 0 0 20px #00d4ff, inset 0 0 20px rgba(0, 212, 255, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .reactor.listening {
+            animation: listen 0.5s infinite alternate;
+            border-color: #ff00d4;
+            box-shadow: 0 0 30px #ff00d4, inset 0 0 30px rgba(255, 0, 212, 0.3);
+        }
+
+        @keyframes listen {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .status {
+            font-size: 14px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .output {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid #00d4ff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            min-height: 100px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .output-text {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .mic-btn {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            background: transparent;
+            color: #00d4ff;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mic-btn:hover, .mic-btn.active {
+            background: #00d4ff;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px #00d4ff;
+        }
+
+        .hint {
+            margin-top: 20px;
+            font-size: 12px;
+            opacity: 0.5;
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">Готов к работе, мисс</div>
+    
+    <div class="reactor" id="reactor">
+        <span style="font-size: 40px;">◉</span>
+    </div>
+    
+    <div class="output" id="output">
+        <div class="output-text">Скажите "Аксиом, просыпайся"</div>
+    </div>
+    
+    <button class="mic-btn" id="micBtn" onclick="toggleListening()">🎤</button>
+    
+    <div class="hint">
+        Команды: погода, дата, время, кто тебя создал, как меня зовут, 
+        установи таймер, мотивируй, очисти, смени цвет, что надеть, 
+        аксиом просыпайся, хорошая работа
+    </div>
+
+    <script src="axiom.js"></script>
+</body>
+  </html>
