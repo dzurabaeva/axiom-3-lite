@@ -1,130 +1,290 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AXIOM 3.0 Lite</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXIOM 3.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
 
-        body {
-            background: #0a0a0a;
-            color: #00d4ff;
-            font-family: 'Courier New', monospace;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .reactor {
-            width: 120px;
-            height: 120px;
-            border: 3px solid #00d4ff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 30px 0;
-            box-shadow: 0 0 20px #00d4ff, inset 0 0 20px rgba(0, 212, 255, 0.2);
-            animation: pulse 2s infinite;
-        }
+:root {
+  --gold: #FFD700;
+  --blue: #00D4FF;
+  --red: #FF0044;
+  --current: var(--gold);
+}
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
+body {
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%);
+  color: var(--current);
+  font-family: 'Orbitron', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden;
+}
 
-        .reactor.listening {
-            animation: listen 0.5s infinite alternate;
-            border-color: #ff00d4;
-            box-shadow: 0 0 30px #ff00d4, inset 0 0 30px rgba(255, 0, 212, 0.3);
-        }
+/* HUD Углы */
+.hud-corner {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  border: 2px solid var(--current);
+  opacity: 0.6;
+}
+.hud-tl { top: 20px; left: 20px; border-right: 0; border-bottom: 0; }
+.hud-tr { top: 20px; right: 20px; border-left: 0; border-bottom: 0; }
+.hud-bl { bottom: 20px; left: 20px; border-right: 0; border-top: 0; }
+.hud-br { bottom: 20px; right: 20px; border-left: 0; border-top: 0; }
 
-        @keyframes listen {
-            from { transform: scale(1); }
-            to { transform: scale(1.1); }
-        }
+.status {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-top: 60px;
+  opacity: 0.8;
+  text-shadow: 0 0 10px var(--current);
+}
 
-        .status {
-            font-size: 14px;
-            margin-bottom: 20px;
-            opacity: 0.7;
-        }
+/* Реактор Arc */
+.reactor-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 40px 0;
+}
 
-        .output {
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid #00d4ff;
-            border-radius: 10px;
-            padding: 20px;
-            width: 100%;
-            max-width: 400px;
-            min-height: 100px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+.reactor {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(255,255,255,0.8) 0%,
+    var(--current) 20%,
+    transparent 60%
+  );
+  box-shadow: 
+    0 0 30px var(--current),
+    0 0 60px var(--current),
+    inset 0 0 30px rgba(0,0,0,0.5);
+  animation: pulse 2s ease-in-out infinite;
+  position: relative;
+}
 
-        .output-text {
-            font-size: 18px;
-            line-height: 1.5;
-        }
+.reactor::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%; height: 60%;
+  border: 3px solid var(--current);
+  border-radius: 50%;
+  box-shadow: 0 0 20px var(--current);
+}
 
-        .mic-btn {
-            width: 80px;
-            height: 80px;
-            border: 2px solid #00d4ff;
-            border-radius: 50%;
-            background: transparent;
-            color: #00d4ff;
-            font-size: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+.reactor::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%; height: 30%;
+  background: var(--current);
+  border-radius: 50%;
+  box-shadow: 0 0 30px var(--current);
+}
 
-        .mic-btn:hover, .mic-btn.active {
-            background: #00d4ff;
-            color: #0a0a0a;
-            box-shadow: 0 0 30px #00d4ff;
-        }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
 
-        .hint {
-            margin-top: 20px;
-            font-size: 12px;
-            opacity: 0.5;
-            text-align: center;
-        }
+.reactor.listening {
+  animation: listen 0.3s infinite alternate;
+  box-shadow: 
+    0 0 50px var(--current),
+    0 0 100px var(--current),
+    inset 0 0 40px var(--current);
+}
 
-        .timer-display {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-    </style>
+@keyframes listen {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* Вывод текста */
+.output {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--current);
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  min-height: 120px;
+  margin-bottom: 30px;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,212,255,0.1);
+}
+
+.output::before {
+  content: '◢ AXIOM ◣';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  background: #0a0a0a;
+  padding: 0 10px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--current);
+}
+
+.output-text {
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: center;
+  text-shadow: 0 0 5px var(--current);
+}
+
+.timer-display {
+  font-size: 42px;
+  font-weight: 900;
+  text-align: center;
+  text-shadow: 0 0 20px var(--current);
+}
+
+/* Кнопка микрофона */
+.mic-btn {
+  width: 70px;
+  height: 70px;
+  border: 2px solid var(--current);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--current);
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,212,255,0.2);
+}
+
+.mic-btn::before {
+  content: '';
+  position: absolute;
+  top: -5px; left: -5px; right: -5px; bottom: -5px;
+  border: 1px solid var(--current);
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.mic-btn:hover, .mic-btn.active {
+  background: var(--current);
+  color: #0a0a0a;
+  box-shadow: 0 0 40px var(--current);
+}
+
+.mic-btn.active::before {
+  opacity: 1;
+  animation: ripple 1s infinite;
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Кнопки тем */
+.themes {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.theme-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.theme-btn:hover { transform: scale(1.2); }
+.theme-gold { background: #FFD700; box-shadow: 0 0 15px #FFD700; }
+.theme-blue { background: #00D4FF; box-shadow: 0 0 15px #00D4FF; }
+.theme-red { background: #FF0044; box-shadow: 0 0 15px #FF0044; }
+
+.hint {
+  margin-top: 20px;
+  font-size: 10px;
+  opacity: 0.6;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  max-width: 350px;
+}
+
+/* Сканирующая линия */
+.scan-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--current);
+  box-shadow: 0 0 10px var(--current);
+  animation: scan 4s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+</style>
 </head>
 <body>
-    <div class="status" id="status">Готов к работе, мисс</div>
-    
-    <div class="reactor" id="reactor">
-        <span style="font-size: 40px;">◉</span>
-    </div>
-    
-    <div class="output" id="output">
-        <div class="output-text">Скажите "Аксиом, просыпайся"</div>
-    </div>
-    
-    <button class="mic-btn" id="micBtn" onclick="toggleListening()">🎤</button>
-    
-    <div class="hint">
-        Команды: погода, дата, время, кто тебя создал, как меня зовут, 
-        установи таймер, мотивируй, очисти, смени цвет, что надеть, 
-        аксиом просыпайся, хорошая работа
-    </div>
+<div class="scan-line"></div>
+<div class="hud-corner hud-tl"></div>
+<div class="hud-corner hud-tr"></div>
+<div class="hud-corner hud-bl"></div>
+<div class="hud-corner hud-br"></div>
 
-    <script src="axiom.js"></script>
+<div class="status" id="status">СИСТЕМА АКТИВНА • МИСС</div>
+
+<div class="reactor-container">
+  <div class="reactor" id="reactor"></div>
+</div>
+
+<div class="output" id="output">
+  <div class="output-text">ГОЛОСОВОЙ ИНТЕРФЕЙС ГОТОВ<br>СКАЖИТЕ "АКСИОМ, ПРОСНИСЬ"</div>
+</div>
+
+<button class="mic-btn" id="micBtn" onclick="toggleListening()">🎤</button>
+
+<div class="themes">
+  <div class="theme-btn theme-gold" onclick="setTheme('#FFD700')" title="Золото"></div>
+  <div class="theme-btn theme-blue" onclick="setTheme('#00D4FF')" title="Голубой"></div>
+  <div class="theme-btn theme-red" onclick="setTheme('#FF0044')" title="Красный"></div>
+</div>
+
+<div class="hint">
+  Команды: погода • дата • время • кто тебя создал • как меня зовут • установи таймер • мотивируй • очисти • что надеть • просыпайся • хорошая работа
+</div>
+
+<script src="axiom.js"></script>
+<script>
+function setTheme(color) {
+  document.documentElement.style.setProperty('--current', color);
+  localStorage.setItem('axiom-theme', color);
+}
+// Загрузить сохранённую тему
+const saved = localStorage.getItem('axiom-theme');
+if (saved) setTheme(saved);
+</script>
 </body>
-  </html>
+    </html>
